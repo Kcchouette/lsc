@@ -45,6 +45,7 @@
  */
 package org.lsc.utils;
 
+import java.text.Normalizer;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -208,8 +209,8 @@ public final class FrenchFilters {
 	 * @return Filtered string
 	 */
 	public static String removeBadChars(final String src) {
-		return filterRegexp(src, REGEXP_ACCENTS_CEDILLAS,
-						REGEXP_STRING_ACCENTS_CEDILLAS);
+		return Normalizer.normalize(src, Normalizer.Form.NFD)
+						.replaceAll("[\\p{M}]", "");
 	}
 
 	/**

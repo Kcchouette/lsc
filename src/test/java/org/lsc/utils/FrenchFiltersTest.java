@@ -28,6 +28,52 @@ public class FrenchFiltersTest {
 	}
 
 	@Test
+	public void testRemoveBadCharsAllAccents() {
+		// Test all accent types covered by the original implementation
+		assertEquals("Aa", FrenchFilters.removeBadChars("Àà"));
+		assertEquals("Aa", FrenchFilters.removeBadChars("Áá"));
+		assertEquals("Aa", FrenchFilters.removeBadChars("Ââ"));
+		assertEquals("Aa", FrenchFilters.removeBadChars("Ää"));
+		assertEquals("Aa", FrenchFilters.removeBadChars("Ãã"));
+		assertEquals("Ee", FrenchFilters.removeBadChars("Éé"));
+		assertEquals("Ee", FrenchFilters.removeBadChars("Èè"));
+		assertEquals("Ee", FrenchFilters.removeBadChars("Êê"));
+		assertEquals("Ee", FrenchFilters.removeBadChars("Ëë"));
+		assertEquals("Ii", FrenchFilters.removeBadChars("Ìì"));
+		assertEquals("Ii", FrenchFilters.removeBadChars("Íí"));
+		assertEquals("Ii", FrenchFilters.removeBadChars("Îî"));
+		assertEquals("Ii", FrenchFilters.removeBadChars("Ïï"));
+		assertEquals("Oo", FrenchFilters.removeBadChars("Òò"));
+		assertEquals("Oo", FrenchFilters.removeBadChars("Óó"));
+		assertEquals("Oo", FrenchFilters.removeBadChars("Ôô"));
+		assertEquals("Oo", FrenchFilters.removeBadChars("Öö"));
+		assertEquals("Oo", FrenchFilters.removeBadChars("Õõ"));
+		assertEquals("Uu", FrenchFilters.removeBadChars("Ùù"));
+		assertEquals("Uu", FrenchFilters.removeBadChars("Úú"));
+		assertEquals("Uu", FrenchFilters.removeBadChars("Ûû"));
+		assertEquals("Uu", FrenchFilters.removeBadChars("Üü"));
+		assertEquals("Yy", FrenchFilters.removeBadChars("Ýý"));
+		assertEquals("Yy", FrenchFilters.removeBadChars("Ÿÿ"));
+		assertEquals("Cc", FrenchFilters.removeBadChars("Çç"));
+		assertEquals("Nn", FrenchFilters.removeBadChars("Ññ"));
+	}
+
+	@Test
+	public void testRemoveBadCharsEmpty() {
+		assertEquals("", FrenchFilters.removeBadChars(""));
+	}
+
+	@Test
+	public void testRemoveBadCharsNoAccents() {
+		assertEquals("Hello World", FrenchFilters.removeBadChars("Hello World"));
+	}
+
+	@Test
+	public void testRemoveBadCharsPreservesNonAccent() {
+		assertEquals("abc123!@#", FrenchFilters.removeBadChars("abc123!@#"));
+	}
+
+	@Test
 	public void testFilterPhone() {
 		String phone = "01 02 03 04 05";
 		assertEquals("33102030405", FrenchFilters.filterPhone(phone));
