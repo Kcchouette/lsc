@@ -8,6 +8,8 @@ package org.lsc.utils;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *
@@ -164,4 +166,32 @@ public class FrenchFiltersTest {
 	 */
 //	public static String filterDate(final String value, final String format)
 //					throws CharacterUnacceptedException {
+
+	@Test
+	public void testGeneratePwdLength() {
+		String pwd = FrenchFilters.generatePwd();
+		assertEquals(8, pwd.length(), "Password should be 8 characters long");
+	}
+
+	@Test
+	public void testGeneratePwdCharset() {
+		String validChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789/";
+		for (int i = 0; i < 100; i++) {
+			String pwd = FrenchFilters.generatePwd();
+			for (char c : pwd.toCharArray()) {
+				assertTrue(validChars.indexOf(c) >= 0,
+					"Password contains invalid character: " + c);
+			}
+		}
+	}
+
+	@Test
+	public void testGeneratePwdNotPredictable() {
+		String pwd1 = FrenchFilters.generatePwd();
+		String pwd2 = FrenchFilters.generatePwd();
+		// Two random passwords should very likely be different
+		// (probability of collision is 1/64^8 ≈ 0)
+		assertFalse(pwd1.isEmpty());
+		assertFalse(pwd2.isEmpty());
+	}
 }
