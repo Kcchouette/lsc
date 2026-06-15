@@ -95,11 +95,13 @@ public final class DateUtils {
 					new SimpleDateFormat(LDAP_DATE_SIMPLIFIED_STORAGE_FORMAT);
 
 	/** The UTC time zone. */
-	private static final TimeZone UTC_TIME_ZONE = TimeZone.getDefault();//getTimeZone("UTC");
+	private static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
 	static {
 		FORMATTER.setLenient(false);
 		FORMATTER.setTimeZone(UTC_TIME_ZONE);
+		SIMPLIFIED_FORMATTER.setLenient(false);
+		SIMPLIFIED_FORMATTER.setTimeZone(UTC_TIME_ZONE);
 	}
 
 	/**
