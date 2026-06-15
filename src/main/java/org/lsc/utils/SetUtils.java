@@ -333,9 +333,4 @@ public class SetUtils {
 		}
 		return checkOrder(srcAttrValues, dstAttrValues);
 	}
-
-	public static void addAllIfNotPresent(Set<Object> set, Set<Object> values) {
-		Set<Object> valuesToAdd = findMissingNeedles(set, values);
-		set.addAll(valuesToAdd);
-	}
 }
