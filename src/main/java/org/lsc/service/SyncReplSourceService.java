@@ -218,22 +218,27 @@ public class SyncReplSourceService extends SimpleJndiSrcService implements IAsyn
 	public IBean getBean(Task task, final String id, final LscDatasets pivotAttrs, boolean fromSameService) throws LscServiceException {
 		IBean srcBean = null;
 		String searchString = null;
-		if(fromSameService || filterIdClean == null) {
-			searchString = filterIdSync;
+		Boolean scriptAsFilter = false;
+		if( fromSameService || ( filterIdClean == null && cleanEntryFilter == null ) ) {
+			if( oneEntryFilter != null && !oneEntryFilter.isEmpty() )
+			{
+				Map<String, Object> table = computePivotAttributes(pivotAttrs);
+				searchString = ScriptingEvaluator.evalFilter(task, oneEntryFilter, table);
+			}
+			else
+			{
+				searchString = replacePlaceholdersInFilter(filterIdSync, pivotAttrs, id);
+			}
 		} else {
-			searchString = filterIdClean; 
-		}
-
-		if( allEntriesFilter() != null && !allEntriesFilter().isEmpty() )
-		{
-			// Evaluate the filter as a script
-			Map<String, Object> table = computePivotAttributes(pivotAttrs);
-			searchString = ScriptingEvaluator.evalFilter(task, allEntriesFilter(), table);
-		}
-		else
-		{
-			// Consider the filter is a simple string
-			searchString = replacePlaceholdersInFilter(searchString, pivotAttrs, id);
+			if( cleanEntryFilter != null && !cleanEntryFilter.isEmpty() )
+			{
+				Map<String, Object> table = computePivotAttributes(pivotAttrs);
+				searchString = ScriptingEvaluator.evalFilter(task, cleanEntryFilter, table);
+			}
+			else
+			{
+				searchString = replacePlaceholdersInFilter(filterIdClean, pivotAttrs, id);
+			}
 		}
 
 		try {
