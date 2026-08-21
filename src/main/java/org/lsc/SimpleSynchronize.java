@@ -67,7 +67,6 @@ import org.lsc.exception.LscConfigurationException;
 import org.lsc.jmx.LscServerImpl;
 import org.lsc.runnable.SynchronizeEntryRunner;
 import org.lsc.service.IAsynchronousService;
-import org.lsc.service.SyncReplSourceService;
 import org.lsc.utils.LSCStructuralLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -223,34 +222,20 @@ public class SimpleSynchronize extends AbstractSynchronize {
 			for (TaskType taskType:LscConfiguration.getTasks()) {
 				Task task = cache.get(taskType.getName());
 
-				switch (mode) {
-				    case async:
-				        // We can only execute async compatible tasks, ie tasks which implement
-				        // the IAsynchronousService interface
-		                if (task.getSourceService() instanceof IAsynchronousService
-	                        || task.getDestinationService() instanceof IAsynchronousService) {
-		                    LOGGER.debug("Launching task {} in asynchrnous mode", task.getName());
-	                        launchTask |= processTask(task, mode);
-	                        nbLaunchedTasks++;
-		                } else {
-		                    LOGGER.warn( "The {} task cannot be launched in asynchronous mode", task.getName());
-		                }
-		                
-		                break;
-		                
-				    case sync:
-				    case clean:
-				        // Just don't start the SyncReplSourceService service, it's purely async
-		                if (task.getSourceService() instanceof SyncReplSourceService) {
-	                          LOGGER.warn( "The {} task cannot be launched in synchronous or clean mode, "
-	                              + "it's a pure asynchronous task", task.getName());
-		                } else {
-                            LOGGER.debug("Launching task {} in {} mode", task.getName(), mode.name());
-	                        launchTask |= processTask(task, mode);
-	                        nbLaunchedTasks++;
-		                }
-		                
-		                break;
+				// Check the task type and discard it if it does not match with the requested mode
+				if (task.getSourceService() instanceof IAsynchronousService
+						|| task.getDestinationService() instanceof IAsynchronousService) {
+					// This is an async task, only execute it in async mode, otherwise ignore it
+					if(mode == Task.Mode.async) {
+						launchTask |= processTask(task, mode);
+						nbLaunchedTasks++;
+					}
+				} else {
+					// It's a sync or cleanup task only execute it in sync or cleanup mode
+					if(mode != Task.Mode.async) {
+						launchTask |= processTask(task, mode);
+						nbLaunchedTasks++;
+					}
 				}
 			}
 		} else {
@@ -277,19 +262,12 @@ public class SimpleSynchronize extends AbstractSynchronize {
 
 				// Launch the task if it exists
 				if (canLaunch) {
-	                // Check that the task is not an pure asynchronous task started in synchronous or clean mode
-	                if (task.getSourceService() instanceof SyncReplSourceService) {
-	                    LOGGER.warn( "The {} task cannot be launched in synchronous or clean mode, "
-	                        + "it's a pure asynchronous task", task.getName());
-	                } else {
-    	                LOGGER.debug("Launching task {} in {} mode", task.getName(), mode.name());
-    	                launchTask |= processTask(task, mode);
-    					nbLaunchedTasks++;
-	                }
+					launchTask |= processTask(task, mode);
+					nbLaunchedTasks++;
 				}
-    		}
+			}
 		}
-		
+
 		if (!launchTask) {
 			return -nbLaunchedTasks;
 		} else {
@@ -517,4 +495,3 @@ public class SimpleSynchronize extends AbstractSynchronize {
 		return new SynchronizeEntryRunner(task, counter, this, null, true).run(bean);
 	}
 }
-
