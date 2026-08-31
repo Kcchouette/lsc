@@ -536,14 +536,6 @@
               <release>17</release>
               <encoding>utf-8</encoding>
             </configuration>
-            <executions>
-              <execution>
-                <phase>compile</phase>
-                <goals>
-                  <goal>compile</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
@@ -705,18 +697,9 @@
             <artifactId>maven-compiler-plugin</artifactId>
             <version>3.15.0</version>
             <configuration>
-              <release>17</release>
+              <release>21</release>
               <encoding>utf-8</encoding>
             </configuration>
-
-            <executions>
-              <execution>
-                <phase>compile</phase>
-                <goals>
-                  <goal>compile</goal>
-                </goals>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
