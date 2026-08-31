@@ -211,7 +211,7 @@ function build_graal_parameters() {
 			GRAAL_MODULE_PATH="${GRAAL_MODULE_PATH}:$( readlink -f ${COMPILER_DIR}/${jar}-[0-9.]*.jar )"
 		done
 
-	else # Java 11, 17
+	else # Java 17
 
 		GRAAL_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+EnableJVMCI -XX:+UseJVMCICompiler"
 
