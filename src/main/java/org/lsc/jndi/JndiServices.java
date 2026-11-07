@@ -767,7 +767,7 @@ public final class JndiServices {
 			sc.setDerefLinkFlag(false);
 			sc.setReturningAttributes(new String[] { "1.1" });
 			sc.setSearchScope(scope);
-			sc.setReturningObjFlag(true);
+			sc.setReturningObjFlag(false);
 
 			byte[] pagedResultsResponse = null;
 			do {
@@ -1129,7 +1129,7 @@ public final class JndiServices {
 			sc.setDerefLinkFlag(false);
 			sc.setReturningAttributes(new String[] { attribute });
 			sc.setSearchScope(SearchControls.OBJECT_SCOPE);
-			sc.setReturningObjFlag(true);
+			sc.setReturningObjFlag(false);
 
 			// Retrieve attribute values
 			SearchResult res = getEntry(objectDn, "objectClass=*", sc, SearchControls.OBJECT_SCOPE);

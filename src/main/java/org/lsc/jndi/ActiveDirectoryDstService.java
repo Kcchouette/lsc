@@ -206,7 +206,7 @@ public class ActiveDirectoryDstService extends SimpleJndiDstService {
 			sc.setDerefLinkFlag(false);
 			sc.setReturningAttributes(new String[] { attribute });
 			sc.setSearchScope(SearchControls.OBJECT_SCOPE);
-			sc.setReturningObjFlag(true);
+			sc.setReturningObjFlag(false);
 
 			// Retrieve attribute values
 			SearchResult res = jndiServices.getEntry(objectDn, "cn=*", sc);
